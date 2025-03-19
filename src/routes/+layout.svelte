@@ -14,7 +14,7 @@
 		--soft-pink: #f19cc1;
 		--light-pink: #f4adc2;
 	}
-	:global(*) {
+	:global(html, body) {
 		font-family: 'Red Hat Display Variable', sans-serif;
 		overflow: hidden; /* no scrolling */
 	}
