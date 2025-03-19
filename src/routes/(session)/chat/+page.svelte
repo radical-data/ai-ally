@@ -89,9 +89,13 @@
 		border-radius: 24px;
 		padding: 1.5rem;
 		height: 75vh;
-		background: linear-gradient(135deg, var(--soft-pink), var(--light-pink));
+		box-sizing: border-box;
+
+		background: rgba(255, 255, 255, 0.15);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 2px solid rgba(255, 255, 255, 0.3);
 		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-		border: 3px solid var(--vibrant-pink);
 	}
 
 	.messages {
@@ -102,9 +106,11 @@
 		padding: 1rem;
 		margin-bottom: 1rem;
 		border-radius: 16px;
-		background: #fff;
+
+		background: rgba(255, 255, 255, 0.3);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
 		box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-		gap: 0.75rem;
 	}
 
 	.message {
