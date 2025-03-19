@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import LeaveModal from '$lib/LeaveModal.svelte';
 
 	let newMessage = $state('');
 	let messages = $state<{ sender: string; text: string }[]>([]);
 
 	let messagesEnd: HTMLDivElement;
+	let showLeaveModal = $state(false);
 
 	function leave() {
-		console.log('leave?');
-		if (confirm('Are you sure you want to leave the chat?')) {
-			goto('/');
-		}
+		showLeaveModal = true;
+	}
+
+	function closeModal() {
+		showLeaveModal = false;
 	}
 
 	function send() {
@@ -64,6 +67,10 @@
 		<button class="leave" onclick={leave}>Leave</button>
 	</div>
 </div>
+
+{#if showLeaveModal}
+	<LeaveModal onClose={closeModal} />
+{/if}
 
 <style>
 	:root {
