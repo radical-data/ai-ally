@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Prompts from '$lib/Prompts.svelte';
+	import LeaveModal from '$lib/LeaveModal.svelte';
 
 	import { onMount } from 'svelte';
 
@@ -8,6 +9,7 @@
 	let messagesEnd: HTMLDivElement;
 
 	let inputRef: HTMLInputElement;
+	let showModal = $state(false);
 
 	function send() {
 		if (newMessage.trim() === '') return;
@@ -60,7 +62,7 @@
 	}
 </script>
 
-<button class="leave-button" onclick={leave}>Leave</button>
+<button class="leave-button" onclick={() => (showModal = true)}>Leave</button>
 
 <div class="chat-container">
 	<div class="messages">
@@ -90,6 +92,16 @@
 		</button>
 	</div>
 </div>
+
+{#if showModal}
+	<LeaveModal
+		onClose={() => (showModal = false)}
+		resetChat={() => {
+			initMessages();
+			newMessage = '';
+		}}
+	/>
+{/if}
 
 <style>
 	.chat-container {

@@ -1,18 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 
-	let { onClose } = $props();
+	let { onClose, resetChat } = $props();
 
 	let confirmed = $state(false);
 
 	function confirmLeave() {
 		confirmed = true;
 
-		// Implement deleting data
-		console.log('Messages cleared');
+		if (resetChat) resetChat();
 
 		setTimeout(() => {
-			goto('/');
+			onClose?.();
 		}, 2000);
 	}
 
