@@ -13,6 +13,7 @@
 	let inputRef: HTMLInputElement;
 	let showModal = $state(false);
 	let aiTyping = $state(false);
+	let typingIndicatorVisible = $state(false);
 
 	async function send() {
 		if (newMessage.trim() === '') return;
@@ -21,19 +22,26 @@
 		messages = [...messages, userMessage];
 		newMessage = '';
 
+		aiTyping = true;
+
+		// Show the typing indicator a little after AI starts thinking
+		setTimeout(
+			() => {
+				if (aiTyping) typingIndicatorVisible = true;
+			},
+			300 + Math.random() * 1000
+		);
+
 		const body = {
 			model: 'llama3.2:1b',
-			messages: [
-				...messages.map((m) => ({
-					role: m.sender === 'user' ? 'user' : 'assistant',
-					content: m.text
-				}))
-			],
+			messages: messages.map((m) => ({
+				role: m.sender === 'user' ? 'user' : 'assistant',
+				content: m.text
+			})),
 			stream: false
 		};
 
 		try {
-			aiTyping = true;
 			const res = await fetch(PUBLIC_AI_URL, {
 				method: 'POST',
 				headers: {
@@ -44,23 +52,22 @@
 			});
 
 			const data = await res.json();
-
 			const aiResponse = data.choices?.[0]?.message?.content || '[no response]';
-
 			messages = [...messages, { sender: 'ai', text: aiResponse }];
 		} catch (error) {
 			console.error('AI Error:', error);
 			messages = [...messages, { sender: 'ai', text: 'Sorry, something went wrong.' }];
+		} finally {
+			aiTyping = false;
+			typingIndicatorVisible = false;
 		}
-		aiTyping = false;
 	}
 
 	$effect(() => {
-		// Trigger only when messages or aiTyping changes
 		messages;
 		aiTyping;
+		typingIndicatorVisible;
 
-		// Schedule DOM update & scroll
 		tick().then(() => {
 			if (messagesEnd) {
 				messagesEnd.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -106,7 +113,7 @@
 				<p>{text}</p>
 			</div>
 		{/each}
-		{#if aiTyping}
+		{#if typingIndicatorVisible}
 			<div
 				class="message ai typing-indicator"
 				aria-live="polite"
