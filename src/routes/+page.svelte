@@ -6,6 +6,8 @@
 	import { PUBLIC_AI_URL } from '$env/static/public';
 	import { PUBLIC_AI_API_KEY } from '$env/static/public';
 
+	const MODEL = 'llama3.2:1b';
+
 	let newMessage = $state('');
 	let messages = $state<{ sender: string; text: string }[]>([]);
 	let messagesEnd: HTMLDivElement;
@@ -45,7 +47,7 @@
 		);
 
 		const body = {
-			model: 'llama3.2:1b',
+			model: MODEL,
 			messages: messages.map((m) => ({
 				role: m.sender === 'user' ? 'user' : 'assistant',
 				content: m.text
@@ -76,8 +78,7 @@
 	}
 
 	$effect(() => {
-		messages;
-		aiTyping;
+		messages.length;
 		typingIndicatorVisible;
 
 		tick().then(() => {
@@ -104,11 +105,6 @@
 				text: 'This is a place for care, solidarity, and shared knowledge—shaped by real experiences of navigating health and the medical system.'
 			}
 		];
-	}
-
-	function handleTextInput(e: Event) {
-		const target = e.target as HTMLInputElement;
-		newMessage = target.value;
 	}
 
 	function fillInput(text: string) {
@@ -145,9 +141,8 @@
 	<div class="controls">
 		<input
 			bind:this={inputRef}
+			bind:value={newMessage}
 			type="text"
-			value={newMessage}
-			oninput={handleTextInput}
 			placeholder="Type your message..."
 			onkeydown={(e) => e.key === 'Enter' && send()}
 		/>
