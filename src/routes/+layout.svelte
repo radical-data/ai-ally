@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Background from '$lib/Background.svelte';
 	import '@fontsource-variable/red-hat-display';
 </script>

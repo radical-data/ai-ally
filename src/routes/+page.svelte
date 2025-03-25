@@ -7,6 +7,8 @@
 	let messages = $state<{ sender: string; text: string }[]>([]);
 	let messagesEnd: HTMLDivElement;
 
+	let inputRef: HTMLInputElement;
+
 	function send() {
 		if (newMessage.trim() === '') return;
 		messages = [...messages, { sender: 'user', text: newMessage }];
@@ -19,7 +21,7 @@
 
 	function leave() {
 		if (confirm('Are you sure you want to leave the chat?')) {
-			messages = [];
+			initMessages();
 		}
 	}
 
@@ -30,8 +32,12 @@
 	});
 
 	onMount(() => {
+		initMessages();
+	});
+
+	function initMessages() {
 		messages = [
-			{ sender: 'ai', text: "Hello, I'm AI Ally. Welcome to this space." },
+			{ sender: 'ai', text: 'Hello, I’m AI Ally. Welcome to this space.' },
 			{
 				sender: 'ai',
 				text: 'Take a moment to settle in, maybe get comfortable with the pillow.'
@@ -41,11 +47,16 @@
 				text: 'This is a place for care, solidarity, and shared knowledge—shaped by real experiences of navigating health and the medical system.'
 			}
 		];
-	});
+	}
 
 	function handleTextInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		newMessage = target.value;
+	}
+
+	function fillInput(text: string) {
+		newMessage = text;
+		inputRef?.focus();
 	}
 </script>
 
@@ -61,10 +72,11 @@
 		<div bind:this={messagesEnd}></div>
 	</div>
 
-	<Prompts></Prompts>
+	<Prompts {fillInput}></Prompts>
 
 	<div class="controls">
 		<input
+			bind:this={inputRef}
 			type="text"
 			value={newMessage}
 			oninput={handleTextInput}
