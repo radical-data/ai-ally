@@ -3,6 +3,8 @@
 	import LeaveModal from '$lib/LeaveModal.svelte';
 
 	import { onMount } from 'svelte';
+	import { PUBLIC_AI_URL } from '$env/static/public';
+	import { PUBLIC_AI_API_KEY } from '$env/static/public';
 
 	let newMessage = $state('');
 	let messages = $state<{ sender: string; text: string }[]>([]);
@@ -11,14 +13,43 @@
 	let inputRef: HTMLInputElement;
 	let showModal = $state(false);
 
-	function send() {
+	async function send() {
 		if (newMessage.trim() === '') return;
-		messages = [...messages, { sender: 'user', text: newMessage }];
 
-		setTimeout(() => {
-			messages = [...messages, { sender: 'ai', text: 'This is a placeholder response.' }];
-		}, 1000);
-		newMessage = '';
+		const userMessage = { sender: 'user', text: newMessage };
+		messages = [...messages, userMessage];
+
+		const body = {
+			model: 'llama3.2:1b',
+			messages: [
+				...messages.map((m) => ({
+					role: m.sender === 'user' ? 'user' : 'assistant',
+					content: m.text
+				}))
+			],
+			stream: false
+		};
+
+		try {
+			const res = await fetch(PUBLIC_AI_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${PUBLIC_AI_API_KEY}`
+				},
+				body: JSON.stringify(body)
+			});
+
+			const data = await res.json();
+
+			const aiResponse = data.choices?.[0]?.message?.content || '[no response]';
+
+			messages = [...messages, { sender: 'ai', text: aiResponse }];
+			newMessage = '';
+		} catch (error) {
+			console.error('AI Error:', error);
+			messages = [...messages, { sender: 'ai', text: 'Sorry, something went wrong.' }];
+		}
 	}
 
 	function leave() {
