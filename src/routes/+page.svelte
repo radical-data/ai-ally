@@ -2,7 +2,7 @@
 	import Prompts from '$lib/Prompts.svelte';
 	import LeaveModal from '$lib/LeaveModal.svelte';
 
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { PUBLIC_AI_URL } from '$env/static/public';
 	import { PUBLIC_AI_API_KEY } from '$env/static/public';
 
@@ -56,9 +56,16 @@
 	}
 
 	$effect(() => {
-		if (messagesEnd) {
-			messagesEnd.scrollIntoView({ behavior: 'smooth' });
-		}
+		// Trigger only when messages or aiTyping changes
+		messages;
+		aiTyping;
+
+		// Schedule DOM update & scroll
+		tick().then(() => {
+			if (messagesEnd) {
+				messagesEnd.scrollIntoView({ behavior: 'smooth', block: 'end' });
+			}
+		});
 	});
 
 	onMount(() => {
@@ -173,6 +180,14 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		padding: 0 1rem;
+		/* Hide scrollbar in all major browsers */
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE/Edge */
+	}
+
+	/* Fallback for hide scrollbar for WebKit */
+	.messages::-webkit-scrollbar {
+		display: none; /* Chrome, Safari */
 	}
 
 	.message {
