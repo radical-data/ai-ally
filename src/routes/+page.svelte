@@ -100,9 +100,11 @@
 			</div>
 		{/each}
 		{#if aiTyping}
-			<div class="message ai typing-indicator">
-				<p>…</p>
-			</div>
+			<div
+				class="message ai typing-indicator"
+				aria-live="polite"
+				aria-label="AI Ally is typing"
+			></div>
 		{/if}
 		<div bind:this={messagesEnd}></div>
 	</div>
@@ -228,5 +230,51 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+
+	.typing-indicator {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		padding: 1rem 1.5rem;
+		background: linear-gradient(to right, var(--soft-pink), var(--light-pink));
+		border-radius: 45px 45px 45px 15px;
+		max-width: 200px;
+		position: relative;
+		gap: 8px;
+	}
+
+	.typing-indicator::after {
+		content: '';
+		display: flex;
+		justify-content: space-between;
+		width: 1.5rem;
+		height: 0.5rem;
+		background:
+			radial-gradient(circle closest-side, rgba(0, 0, 0, 0.5) 50%, transparent 60%) 0 50%,
+			radial-gradient(circle closest-side, rgba(0, 0, 0, 0.5) 50%, transparent 60%) 50% 50%,
+			radial-gradient(circle closest-side, rgba(0, 0, 0, 0.5) 50%, transparent 60%) 100% 50%;
+		background-repeat: no-repeat;
+		background-size: 0.4rem 0.4rem;
+		animation: blink 1.2s infinite ease-in-out;
+	}
+
+	@keyframes blink {
+		0% {
+			background-position:
+				0 50%,
+				50% 50%,
+				100% 50%;
+			opacity: 0.2;
+		}
+		33% {
+			opacity: 0.5;
+		}
+		66% {
+			opacity: 0.8;
+		}
+		100% {
+			opacity: 0.2;
+		}
 	}
 </style>
