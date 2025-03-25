@@ -18,6 +18,7 @@
 
 		const userMessage = { sender: 'user', text: newMessage };
 		messages = [...messages, userMessage];
+		newMessage = '';
 
 		const body = {
 			model: 'llama3.2:1b',
@@ -45,16 +46,9 @@
 			const aiResponse = data.choices?.[0]?.message?.content || '[no response]';
 
 			messages = [...messages, { sender: 'ai', text: aiResponse }];
-			newMessage = '';
 		} catch (error) {
 			console.error('AI Error:', error);
 			messages = [...messages, { sender: 'ai', text: 'Sorry, something went wrong.' }];
-		}
-	}
-
-	function leave() {
-		if (confirm('Are you sure you want to leave the chat?')) {
-			initMessages();
 		}
 	}
 
