@@ -15,6 +15,18 @@
 	let aiTyping = $state(false);
 	let typingIndicatorVisible = $state(false);
 
+	let messagesContainer: HTMLDivElement;
+	let showFade = $state(false);
+
+	function checkScrollFade() {
+		if (!messagesContainer) return;
+
+		const hasScrolled = messagesContainer.scrollTop > 4;
+		const canScroll = messagesContainer.scrollHeight > messagesContainer.clientHeight;
+
+		showFade = canScroll && hasScrolled;
+	}
+
 	async function send() {
 		if (newMessage.trim() === '') return;
 
@@ -69,6 +81,7 @@
 		typingIndicatorVisible;
 
 		tick().then(() => {
+			checkScrollFade();
 			if (messagesEnd) {
 				messagesEnd.scrollIntoView({ behavior: 'smooth', block: 'end' });
 			}
@@ -107,7 +120,11 @@
 <button class="leave-button" onclick={() => (showModal = true)}>Leave</button>
 
 <div class="chat-container">
-	<div class="messages">
+	<div
+		class="messages {showFade ? 'fade-visible' : ''}"
+		bind:this={messagesContainer}
+		onscroll={checkScrollFade}
+	>
 		{#each messages as { sender, text }, i (i)}
 			<div class="message {sender === 'user' ? 'user' : 'ai'}">
 				<p>{text}</p>
@@ -154,12 +171,14 @@
 
 <style>
 	.chat-container {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
 		height: 100vh;
 		padding: 2rem 1rem;
 		box-sizing: border-box;
+		overflow: hidden;
 	}
 
 	.leave-button {
@@ -187,14 +206,21 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		padding: 0 1rem;
-		/* Hide scrollbar in all major browsers */
-		scrollbar-width: none; /* Firefox */
-		-ms-overflow-style: none; /* IE/Edge */
+		position: relative;
+		scroll-behavior: smooth;
 	}
 
-	/* Fallback for hide scrollbar for WebKit */
-	.messages::-webkit-scrollbar {
-		display: none; /* Chrome, Safari */
+	/* Only show the scroll-fade mask when scrolling down */
+	.messages.fade-visible {
+		-webkit-mask-image: linear-gradient(to bottom, transparent, black 2rem);
+		mask-image: linear-gradient(to bottom, transparent, black 2rem);
+		mask-mode: alpha;
+		mask-composite: destination-in;
+		-webkit-mask-composite: destination-in;
+
+		transition:
+			-webkit-mask-image 0.4s ease-in-out,
+			mask-image 0.4s ease-in-out;
 	}
 
 	.message {
