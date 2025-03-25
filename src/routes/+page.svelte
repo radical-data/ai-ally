@@ -12,6 +12,7 @@
 
 	let inputRef: HTMLInputElement;
 	let showModal = $state(false);
+	let aiTyping = $state(false);
 
 	async function send() {
 		if (newMessage.trim() === '') return;
@@ -32,6 +33,7 @@
 		};
 
 		try {
+			aiTyping = true;
 			const res = await fetch(PUBLIC_AI_URL, {
 				method: 'POST',
 				headers: {
@@ -50,6 +52,7 @@
 			console.error('AI Error:', error);
 			messages = [...messages, { sender: 'ai', text: 'Sorry, something went wrong.' }];
 		}
+		aiTyping = false;
 	}
 
 	$effect(() => {
@@ -96,6 +99,11 @@
 				<p>{text}</p>
 			</div>
 		{/each}
+		{#if aiTyping}
+			<div class="message ai typing-indicator">
+				<p>…</p>
+			</div>
+		{/if}
 		<div bind:this={messagesEnd}></div>
 	</div>
 
