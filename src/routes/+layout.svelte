@@ -15,7 +15,11 @@
 		--light-pink: #f4adc2;
 	}
 	:global(html, body) {
-		font-family: 'Red Hat Display Variable', sans-serif;
 		overflow: hidden; /* no scrolling */
+	}
+
+	:global(html, body, input, button) {
+		font-family: 'Red Hat Display Variable', sans-serif;
+		font-size: 40px;
 	}
 </style>
