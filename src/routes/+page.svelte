@@ -6,7 +6,7 @@
 	import { PUBLIC_AI_URL } from '$env/static/public';
 	import { PUBLIC_AI_API_KEY } from '$env/static/public';
 
-	const MODEL = 'llama3.2:1b';
+	const MODEL = 'ai-ally';
 
 	let newMessage = $state('');
 	let messages = $state<{ sender: string; text: string }[]>([]);
