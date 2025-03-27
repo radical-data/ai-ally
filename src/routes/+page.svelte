@@ -102,7 +102,15 @@
 			},
 			{
 				sender: 'ai',
-				text: 'This is a place for care, solidarity, and shared knowledge—shaped by real experiences of navigating health and the medical system.'
+				text: 'Your chat is private. What you say here will not be saved or used to train me. Later, I may invite you to write a letter. If you choose to place your letter on the grid, it could help me learn and evolve.'
+			},
+			{
+				sender: 'ai',
+				text: "I'm here to listen, reflect, and talk with you. But I can make mistakes—please check anything important. I'm for informational purposes only and cannot replace a professional. If you have health concerns, always speak to a licensed healthcare provider."
+			},
+			{
+				sender: 'ai',
+				text: "Let's begin gently. What's been on your mind lately?"
 			}
 		];
 	}
