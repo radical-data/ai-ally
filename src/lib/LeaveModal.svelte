@@ -28,6 +28,11 @@
 				It's okay to take a break. If you leave now, your conversation will be cleared and all data
 				deleted.
 			</p>
+			<p>
+				If you want to stay a little longer, I invite you to write a letter—of protest, grief, or
+				solidarity—for the Wall of Grievances. Use the paper and pen beside you, and hang your words
+				with the magnets.
+			</p>
 			<div class="modal-buttons">
 				<button class="stay" onclick={cancelLeave}>Stay</button>
 				<button class="leave" onclick={confirmLeave}>Leave</button>
