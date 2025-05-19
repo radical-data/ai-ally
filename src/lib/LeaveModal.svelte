@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-
-	let { onClose, resetChat } = $props();
+	let { onClose, resetChat, timeoutMs = 5_000 } = $props();
 
 	let confirmed = $state(false);
 
@@ -9,10 +7,9 @@
 		confirmed = true;
 
 		if (resetChat) resetChat();
-
 		setTimeout(() => {
 			onClose?.();
-		}, 2000);
+		}, timeoutMs);
 	}
 
 	function cancelLeave() {
