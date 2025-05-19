@@ -1,6 +1,6 @@
-# AI Aly
+# AI Ally
 
-**AI Aly** is a chatbot and installation designed as a reflective companion in healthcare settings. The experience blends conversational AI with physical-world prompts, like writing letters for a Wall of Grievances.
+**AI Ally** is a chatbot and installation designed as a reflective companion in healthcare settings. The experience blends conversational AI with physical-world prompts, like writing letters for a Wall of Grievances.
 
 ## Developing
 
