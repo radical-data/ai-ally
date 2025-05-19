@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Prompts from '$lib/Prompts.svelte';
 	import LeaveModal from '$lib/LeaveModal.svelte';
+	import { useInactivityResetTimer, useEngagementPromptTimer } from '$lib/sessionTimers.svelte';
 
 	import { onMount, tick } from 'svelte';
 	import { PUBLIC_AI_URL } from '$env/static/public';
@@ -20,14 +21,40 @@
 	let messagesContainer: HTMLDivElement;
 	let showFade = $state(false);
 
-	function checkScrollFade() {
-		if (!messagesContainer) return;
-
-		const hasScrolled = messagesContainer.scrollTop > 4;
-		const canScroll = messagesContainer.scrollHeight > messagesContainer.clientHeight;
-
-		showFade = canScroll && hasScrolled;
+	function openModal() {
+		showModal = true;
 	}
+
+	useInactivityResetTimer({
+		timeoutMs: 60_000,
+		responseWindowMs: 10_000,
+		onPrompt: () => {
+			showModal = true;
+		},
+		onReset: () => {
+			initMessages();
+			newMessage = '';
+			showModal = false;
+		}
+	});
+
+	useEngagementPromptTimer({
+		onPrompt: () => {
+			console.log('Prompt: Would you like to write a letter?');
+		}
+	});
+
+	let scrollTop = $state(0);
+
+	function handleScroll() {
+		if (!messagesContainer) return;
+		scrollTop = messagesContainer.scrollTop;
+	}
+
+	$effect(() => {
+		const canScroll = messagesContainer?.scrollHeight > messagesContainer?.clientHeight;
+		showFade = canScroll && scrollTop > 4;
+	});
 
 	async function send() {
 		if (newMessage.trim() === '') return;
@@ -82,7 +109,7 @@
 		typingIndicatorVisible;
 
 		tick().then(() => {
-			checkScrollFade();
+			handleScroll();
 			if (messagesEnd) {
 				messagesEnd.scrollIntoView({ behavior: 'smooth', block: 'end' });
 			}
@@ -95,7 +122,7 @@
 
 	function initMessages() {
 		messages = [
-			{ sender: 'ai', text: 'Hello, I’m AI Ally. Welcome to this space.' },
+			{ sender: 'ai', text: "Hello, I'm AI Ally. Welcome to this space." },
 			{
 				sender: 'ai',
 				text: 'Take a moment to settle in, maybe get comfortable with the pillow.'
@@ -121,13 +148,13 @@
 	}
 </script>
 
-<button class="leave-button" onclick={() => (showModal = true)}>Leave</button>
+<button class="leave-button" onclick={openModal}>Leave</button>
 
 <div class="chat-container">
 	<div
 		class="messages {showFade ? 'fade-visible' : ''}"
 		bind:this={messagesContainer}
-		onscroll={checkScrollFade}
+		onscroll={handleScroll}
 	>
 		{#each messages as { sender, text }, i (i)}
 			<div class="message {sender === 'user' ? 'user' : 'ai'}">
@@ -230,7 +257,6 @@
 		max-width: 85%;
 		padding-block: 24px;
 		padding-inline: 20px;
-		border-radius: 20px;
 		line-height: 126%;
 		border-radius: 45px 45px 45px 15px;
 	}

@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-
-	let { onClose, resetChat } = $props();
+	let { onClose, resetChat, timeoutMs = 5_000 } = $props();
 
 	let confirmed = $state(false);
 
@@ -9,10 +7,9 @@
 		confirmed = true;
 
 		if (resetChat) resetChat();
-
 		setTimeout(() => {
 			onClose?.();
-		}, 2000);
+		}, timeoutMs);
 	}
 
 	function cancelLeave() {
@@ -52,7 +49,7 @@
 		left: 0;
 		width: 100vw;
 		height: 100vh;
-		background: rgba(0, 0, 0, 0.4);
+		background: rgba(255, 245, 245, 0.9);
 		backdrop-filter: blur(4px);
 		display: flex;
 		align-items: center;
@@ -61,23 +58,21 @@
 	}
 
 	.modal {
-		background: rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
+		background: rgba(255, 245, 245, 0.9); /* soft light pink for readability */
+		backdrop-filter: blur(8px);
 		border-radius: 24px;
-		border: 2px solid rgba(255, 255, 255, 0.3);
+		border: 2px solid rgba(255, 255, 255, 0.5);
 		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 		padding: 2rem;
 		text-align: center;
 		width: 80%;
-		max-width: 400px;
-		color: var(--deep-red);
+		color: #300;
+		animation: fadeIn 0.3s ease;
 	}
-
 	.modal h2 {
 		margin-top: 0;
 		font-size: 1.5rem;
-		color: var(--bold-red);
+		color: #800;
 	}
 
 	.modal p {
