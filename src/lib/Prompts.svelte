@@ -65,31 +65,35 @@
 		border: none;
 		padding: 0;
 		animation: float 3s infinite ease-in-out;
+		will-change: transform;
 	}
 
 	.bean-wrapper:nth-child(2) {
 		animation-delay: 0.2s;
+		animation-duration: 3.1s;
 	}
 	.bean-wrapper:nth-child(3) {
 		animation-delay: 0.4s;
+		animation-duration: 2.9s;
 	}
 	.bean-wrapper:nth-child(4) {
 		animation-delay: 0.6s;
+		animation-duration: 3.2s;
+	}
+
+	@keyframes float {
+		0%,
+		100% {
+			transform: translateY(0) rotate(0deg);
+		}
+		50% {
+			transform: translateY(-6px) rotate(1deg);
+		}
 	}
 
 	svg {
 		width: 100%;
 		height: 100%;
 		display: block;
-	}
-
-	@keyframes float {
-		0%,
-		100% {
-			transform: translateY(0);
-		}
-		50% {
-			transform: translateY(-6px);
-		}
 	}
 </style>
